@@ -1,217 +1,435 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JustSOC | Fractional Cloud Security Architect</title>
+    <title>JustSOC | Security Architecture & Consulting</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        dark: {
-                            900: '#050505',
-                            800: '#0a0a0a',
-                            700: '#121212',
-                            600: '#1a1a1a'
-                        },
-                        cyber: {
-                            primary: '#00ff41',
-                            secondary: '#00d4ff',
-                            accent: '#ff0055'
-                        }
-                    },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        background: '#0a0a0c',
+                        foreground: '#f8fafc',
+                        accent: {
+                            DEFAULT: '#7c3aed',
+                            glow: '#a78bfa',
+                            cyan: '#06b6d4',
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
+        :root {
+            --accent: #7c3aed;
+            --accent-cyan: #06b6d4;
+        }
+        body {
+            background-color: #0a0a0c;
+            color: #f8fafc;
+            -webkit-font-smoothing: antialiased;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .bg-grid {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-card {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glow-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(124, 58, 237, 0.2);
+        }
+        .glow-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(124, 58, 237, 0.1) 0%, transparent 80%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .glow-card:hover::after { opacity: 1; }
+        
         @keyframes scanline {
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100%); }
         }
         .scanline {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 65, 0.1);
-            animation: scanline 8s linear infinite;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, rgba(124, 58, 237, 0.05) 50%, transparent);
+            animation: scanline 10s linear infinite;
             pointer-events: none;
         }
-        .glass {
+        .stack-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            transition: all 0.2s;
         }
+        .stack-tag:hover {
+            border-color: var(--accent);
+            color: white;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background: var(--accent-cyan);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body class="bg-dark-900 text-gray-300 font-sans selection:bg-cyber-primary selection:text-black">
-    <div class="scanline"></div>
+<body class="font-sans">
+    <!-- Ambient Background -->
+    <div class="fixed inset-0 z-0 bg-grid pointer-events-none"></div>
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-cyan/5 rounded-full blur-[150px] pointer-events-none"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-2">
-                    <span class="text-cyber-primary font-mono text-xl font-bold tracking-tighter">JUST<span class="text-white">SOC</span></span>
+    <nav class="fixed w-full z-50 px-6 py-6 transition-all duration-300" id="nav">
+        <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 py-3">
+            <div class="flex items-center gap-3 group">
+                <div class="w-8 h-8 bg-gradient-to-tr from-accent to-accent-cyan rounded-lg flex items-center justify-center shadow-lg shadow-accent/20 transition-transform group-hover:rotate-12">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
                 </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-widest">
-                    <a href="#services" class="hover:text-cyber-primary transition-colors">Services</a>
-                    <a href="#expertise" class="hover:text-cyber-primary transition-colors">Expertise</a>
-                    <a href="#portfolio" class="hover:text-cyber-primary transition-colors">Portfolio</a>
-                    <a href="#contact" class="px-4 py-2 bg-cyber-primary text-black font-bold rounded-sm hover:bg-white transition-all">Engage</a>
-                </div>
+                <span class="font-display font-bold text-xl tracking-tight">Just<span class="text-accent-glow">SOC</span></span>
             </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+                <a href="#capabilities" class="hover:text-white transition-colors">Capabilities</a>
+                <a href="#services" class="hover:text-white transition-colors">Services</a>
+                <a href="#approach" class="hover:text-white transition-colors">Approach</a>
+                <a href="#stack" class="hover:text-white transition-colors">Stack</a>
+            </div>
+            <a href="#contact" class="bg-white text-black text-xs font-bold px-5 py-2.5 rounded-full hover:bg-accent hover:text-white transition-all shadow-xl">
+                Engage Architect
+            </a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,65,0.05)_0%,transparent_70%)]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyber-primary/10 border border-cyber-primary/20 text-cyber-primary text-xs font-mono mb-6">
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6">
+            <div class="max-w-4xl text-center">
+                <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 px-4 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-[0.2em] text-accent-glow mb-8 animate-fade-in">
                     <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-primary"></span>
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
                     </span>
-                    <span>FRACTIONAL CLOUD SECURITY ARCHITECT</span>
+                    Independent Security Advisory
                 </div>
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                    Harden Your Cloud. <br/>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-primary to-cyber-secondary">Scale Securely.</span>
+                <h1 class="text-5xl md:text-8xl font-display font-bold tracking-tight mb-8 leading-[1.05]">
+                    I design, deploy & defend the <span class="text-gradient">security stack</span> your business runs on.
                 </h1>
-                <p class="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed font-light">
-                    Strategic cybersecurity leadership for high-growth enterprises. Specializing in SecOps, Cloud Infrastructure Hardening, and Continuous Compliance.
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+                    From endpoint to email, network to cloud — I architect, implement and monitor EDR, SASE, DLP, and SIEM programs that actually hold up in the real world.
                 </p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#contact" class="px-8 py-4 bg-cyber-primary text-black font-bold rounded-sm text-center hover:shadow-[0_0_20px_rgba(0,255,65,0.4)] transition-all uppercase tracking-widest text-sm">
-                        Request Audit
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-4 bg-accent text-white font-semibold rounded-full shadow-2xl shadow-accent/30 hover:scale-105 transition-all text-sm uppercase tracking-widest">
+                        Start Engagement
                     </a>
-                    <a href="#expertise" class="px-8 py-4 border border-white/10 hover:bg-white/5 transition-all rounded-sm text-center text-white uppercase tracking-widest text-sm">
-                        View Stack
+                    <a href="#services" class="w-full sm:w-auto px-8 py-4 glass text-white font-semibold rounded-full hover:bg-white/5 transition-all text-sm uppercase tracking-widest">
+                        View Tracks
                     </a>
                 </div>
             </div>
-        </div>
-        
-        <!-- Background Grid/Decoration -->
-        <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none hidden lg:block">
-            <pre class="text-[10px] font-mono leading-none text-cyber-primary">
-                01010101010101010101010101
-                10101010101010101010101010
-                01010101010101010101010101
-                10101010101010101010101010
-                01010101010101010101010101
-            </pre>
-        </div>
-    </section>
 
-    <!-- Expertise Section -->
-    <section id="expertise" class="py-24 bg-dark-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-8 glass border-t-2 border-cyber-primary">
-                    <div class="text-cyber-primary mb-4 text-2xl font-mono">01/</div>
-                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Cloud Hardening</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        AWS & Azure infrastructure security, IAM policy least-privilege enforcement, and VPC security boundary design.
-                    </p>
-                </div>
-                <div class="p-8 glass border-t-2 border-cyber-secondary">
-                    <div class="text-cyber-secondary mb-4 text-2xl font-mono">02/</div>
-                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">SSE & SASE</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Netskope implementation, Zero Trust Network Access (ZTNA), and Cloud Access Security Broker (CASB) strategies.
-                    </p>
-                </div>
-                <div class="p-8 glass border-t-2 border-cyber-accent">
-                    <div class="text-cyber-accent mb-4 text-2xl font-mono">03/</div>
-                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Compliance</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Automated SOC2, HIPAA, and ISO 27001 readiness. Infrastructure as Code (IaC) security scanning and guardrails.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Detailed Services -->
-    <section id="services" class="py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Fractional Services</h2>
-                <div class="h-1 w-20 bg-cyber-primary"></div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="space-y-6">
-                    <div class="flex items-start space-x-4 group">
-                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
-                        <div>
-                            <h4 class="text-lg font-bold text-white mb-2">Vulnerability Management</h4>
-                            <p class="text-gray-400">Continuous scanning, triage, and remediation workflows for cloud-native applications.</p>
-                        </div>
+            <!-- Terminal Mockup -->
+            <div class="mt-24 w-full max-w-5xl glass rounded-2xl overflow-hidden shadow-2xl border-white/5 animate-float relative">
+                <div class="scanline"></div>
+                <div class="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center justify-between">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
                     </div>
-                    <div class="flex items-start space-x-4 group">
-                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
-                        <div>
-                            <h4 class="text-lg font-bold text-white mb-2">Security Automation</h4>
-                            <p class="text-gray-400">Custom Python/Go tooling for incident response and automated security patching.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-4 group">
-                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
-                        <div>
-                            <h4 class="text-lg font-bold text-white mb-2">Architectural Review</h4>
-                            <p class="text-gray-400">Threat modeling and design-level security reviews for new product features.</p>
-                        </div>
-                    </div>
+                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">engagement_node_v2.0</div>
+                    <div class="w-12"></div>
                 </div>
-                <div class="relative">
-                    <div class="aspect-video bg-dark-800 rounded-lg border border-white/5 flex items-center justify-center overflow-hidden">
-                        <div class="font-mono text-[10px] text-cyber-primary/40 animate-pulse">
-                            [SYSTEM_ANALYSIS] RUNNING...<br/>
-                            [SCANNING_VPC_PEERING]... DONE<br/>
-                            [CHECKING_S3_BUCKETS]... 0 PUBLIC FOUND<br/>
-                            [IAM_ENFORCER]... ACTIVE
-                        </div>
+                <div class="p-8 font-mono text-sm leading-relaxed text-slate-300 min-h-[300px]" id="terminal">
+                    <div class="flex gap-4 mb-2">
+                        <span class="text-accent">$</span>
+                        <span class="typing-text" data-text="justsoc assess --scope enterprise"></span>
+                    </div>
+                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-slate-600">></span>
+                        <span>Mapping assets ........................ <span class="text-accent-cyan">1,420 endpoints · 84 servers</span></span>
+                    </div>
+                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-slate-600">></span>
+                        <span>Evaluating controls ................... <span class="text-accent-cyan">EDR · SASE · DLP · Email · SIEM</span></span>
+                    </div>
+                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-slate-600">></span>
+                        <span>Posture vs NIST CSF ................... <span class="text-accent-cyan">62% → target 88%</span></span>
+                    </div>
+                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-slate-600">></span>
+                        <span class="text-red-400">Identified risks ...................... 7 critical · 14 high · 31 medium</span>
+                    </div>
+                    <div class="flex gap-4 mb-4 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-slate-600">></span>
+                        <span class="text-green-400">Roadmap generated ..................... ✓ 90-day plan delivered</span>
+                    </div>
+                    <div class="flex gap-4 opacity-0 terminal-line" style="transition: opacity 0.5s">
+                        <span class="text-accent">$</span>
+                        <span class="terminal-cursor"></span>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact -->
-    <section id="contact" class="py-24 bg-dark-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-8">Ready to secure your perimeter?</h2>
-            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
-                Currently accepting 1 new fractional client for Q3 2026.
-            </p>
-            <a href="mailto:hello@justsoc.in" class="text-3xl md:text-5xl font-mono text-cyber-primary hover:text-white transition-colors underline decoration-2 underline-offset-8">
-                hello@justsoc.in
-            </a>
-        </div>
-    </section>
+        <!-- Capabilities (Bento) -->
+        <section id="capabilities" class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-16">
+                    <span class="text-accent font-mono text-xs uppercase tracking-[0.3em] mb-4 block">Architect's View</span>
+                    <h2 class="text-4xl md:text-6xl font-display font-bold leading-tight max-w-3xl">
+                        An integrated defense across the <span class="text-gradient">full stack.</span>
+                    </h2>
+                </div>
 
-    <footer class="py-12 border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs font-mono uppercase tracking-widest text-gray-500">
-            <div>&copy; 2026 JustSOC Cybersecurity Services</div>
-            <div class="mt-4 md:mt-0 space-x-6">
-                <span>justsoc.in</span>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="md:col-span-2 md:row-span-2 glass rounded-3xl p-8 glow-card group">
+                        <div class="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center mb-6 text-accent group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold mb-4">EDR / XDR Architecture</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-8">
+                            Tool selection, policy design, exclusions, and response playbooks across SentinelOne, CrowdStrike, and Defender — engineered without alert fatigue.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="stack-tag">SentinelOne</span>
+                            <span class="stack-tag">CrowdStrike</span>
+                            <span class="stack-tag">Defender</span>
+                            <span class="stack-tag">Huntress</span>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 glass rounded-3xl p-8 glow-card group">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-10 h-10 bg-accent-cyan/20 rounded-xl flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9c1.657 0 3 4.03 3 9s-1.343 9-3 9m0-18c-1.657 0-3 4.03-3 9s1.343 9 3 9"/></svg>
+                            </div>
+                            <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Network</span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold mb-2">SASE & SSE Implementation</h3>
+                        <p class="text-slate-400 text-sm">SWG, CASB, ZTNA & FWaaS rollout for hybrid teams using Netskope and Zscaler.</p>
+                    </div>
+
+                    <div class="md:col-span-1 glass rounded-3xl p-6 glow-card">
+                        <h3 class="text-lg font-display font-bold mb-2">SIEM Engineering</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed mb-4">Log pipelines, correlation rules, and MITRE coverage dashboards.</p>
+                        <span class="text-accent-cyan font-mono text-[10px] uppercase">Splunk · Sentinel</span>
+                    </div>
+
+                    <div class="md:col-span-1 glass rounded-3xl p-6 glow-card">
+                        <h3 class="text-lg font-display font-bold mb-2">GRC & Audits</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed mb-4">ISO 27001, SOC 2, and NIST CSF gap analysis and control mapping.</p>
+                        <span class="text-accent font-mono text-[10px] uppercase">Compliance readiness</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tooling Marquee -->
+        <section id="stack" class="py-20 border-y border-white/5 bg-white/[0.01]">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+                    <span class="text-lg font-display font-bold tracking-widest">NETSKOPE</span>
+                    <span class="text-lg font-display font-bold tracking-widest">AWS</span>
+                    <span class="text-lg font-display font-bold tracking-widest">AZURE</span>
+                    <span class="text-lg font-display font-bold tracking-widest">CROWDSTRIKE</span>
+                    <span class="text-lg font-display font-bold tracking-widest">SPLUNK</span>
+                    <span class="text-lg font-display font-bold tracking-widest">SENTINELONE</span>
+                    <span class="text-lg font-display font-bold tracking-widest">ZSCALER</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">Expertise built on <span class="text-gradient">outcome.</span></h2>
+                    <p class="text-slate-400 max-w-xl mx-auto">Scoped tight engagements delivered by an architect, not a reseller.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="p-8 border-l border-white/10 hover:border-accent transition-colors group">
+                        <div class="text-slate-600 font-mono text-xs mb-6 group-hover:text-accent transition-colors">01/</div>
+                        <h3 class="text-xl font-display font-bold mb-4">Architecture Design</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Complete blueprints for Zero Trust architecture. Designing network boundaries, IAM policies, and data flow guardrails from the ground up.
+                        </p>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="p-8 border-l border-white/10 hover:border-accent transition-colors group">
+                        <div class="text-slate-600 font-mono text-xs mb-6 group-hover:text-accent transition-colors">02/</div>
+                        <h3 class="text-xl font-display font-bold mb-4">Security Automation</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Eliminating manual overhead via SOAR and custom scripting. Automated vulnerability triage and patch governance workflows.
+                        </p>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="p-8 border-l border-white/10 hover:border-accent transition-colors group">
+                        <div class="text-slate-600 font-mono text-xs mb-6 group-hover:text-accent transition-colors">03/</div>
+                        <h3 class="text-xl font-display font-bold mb-4">Fractional CISO</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Strategic leadership for high-growth startups. Board reporting, security roadmaps, and vendor risk management.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 px-6">
+            <div class="max-w-5xl mx-auto glass rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent via-accent-cyan to-accent"></div>
+                <h2 class="text-4xl md:text-7xl font-display font-bold mb-10 tracking-tight leading-none">
+                    Let's talk about your <span class="text-gradient">security posture.</span>
+                </h2>
+                <p class="text-slate-400 text-lg mb-12 max-w-xl mx-auto font-light">
+                    Currently accepting one new fractional engagement for Q3 2026.
+                </p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                    <a href="mailto:hello@justsoc.in" class="text-2xl md:text-4xl font-mono text-white hover:text-accent transition-colors decoration-accent underline underline-offset-8 decoration-2">
+                        hello@justsoc.in
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-20 px-6 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-6 h-6 bg-white/10 rounded flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-sm">JUSTSOC.IN</span>
+            </div>
+            <div class="flex gap-12 text-[10px] font-mono text-slate-500 uppercase tracking-widest">
                 <span>Bengaluru, IN</span>
+                <span>© 2026 JUSTSOC</span>
+                <a href="#top" class="hover:text-accent transition-colors">Back to Top</a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Glow card cursor effect
+        document.querySelectorAll('.glow-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+        });
+
+        // Terminal animation
+        const typingElements = document.querySelectorAll('.typing-text');
+        const lines = document.querySelectorAll('.terminal-line');
+        
+        function typeEffect(element, text, speed = 40) {
+            let i = 0;
+            return new Promise(resolve => {
+                const interval = setInterval(() => {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    if (i > text.length) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, speed);
+            });
+        }
+
+        async function runTerminal() {
+            for (let i = 0; i < typingElements.length; i++) {
+                await typeEffect(typingElements[i], typingElements[i].getAttribute('data-text'));
+                await new Promise(r => setTimeout(r, 500));
+            }
+            for (let i = 0; i < lines.length; i++) {
+                lines[i].style.opacity = '1';
+                await new Promise(r => setTimeout(r, 400));
+            }
+        }
+
+        // Run when visible
+        const observer = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                runTerminal();
+                observer.disconnect();
+            }
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.getElementById('terminal'));
+
+        // Nav blur on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if(window.scrollY > 50) {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-6');
+            } else {
+                nav.classList.add('py-6');
+                nav.classList.remove('py-4');
+            }
+        });
+    </script>
 </body>
 </html>
