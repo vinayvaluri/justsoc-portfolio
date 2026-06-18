@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustSOC | Fractional Cloud Security Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#050505',
+                            800: '#0a0a0a',
+                            700: '#121212',
+                            600: '#1a1a1a'
+                        },
+                        cyber: {
+                            primary: '#00ff41',
+                            secondary: '#00d4ff',
+                            accent: '#ff0055'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 65, 0.1);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-300 font-sans selection:bg-cyber-primary selection:text-black">
+    <div class="scanline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-cyber-primary font-mono text-xl font-bold tracking-tighter">JUST<span class="text-white">SOC</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-widest">
+                    <a href="#services" class="hover:text-cyber-primary transition-colors">Services</a>
+                    <a href="#expertise" class="hover:text-cyber-primary transition-colors">Expertise</a>
+                    <a href="#portfolio" class="hover:text-cyber-primary transition-colors">Portfolio</a>
+                    <a href="#contact" class="px-4 py-2 bg-cyber-primary text-black font-bold rounded-sm hover:bg-white transition-all">Engage</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,65,0.05)_0%,transparent_70%)]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyber-primary/10 border border-cyber-primary/20 text-cyber-primary text-xs font-mono mb-6">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-primary"></span>
+                    </span>
+                    <span>FRACTIONAL CLOUD SECURITY ARCHITECT</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                    Harden Your Cloud. <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-primary to-cyber-secondary">Scale Securely.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed font-light">
+                    Strategic cybersecurity leadership for high-growth enterprises. Specializing in SecOps, Cloud Infrastructure Hardening, and Continuous Compliance.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="px-8 py-4 bg-cyber-primary text-black font-bold rounded-sm text-center hover:shadow-[0_0_20px_rgba(0,255,65,0.4)] transition-all uppercase tracking-widest text-sm">
+                        Request Audit
+                    </a>
+                    <a href="#expertise" class="px-8 py-4 border border-white/10 hover:bg-white/5 transition-all rounded-sm text-center text-white uppercase tracking-widest text-sm">
+                        View Stack
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Background Grid/Decoration -->
+        <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none hidden lg:block">
+            <pre class="text-[10px] font-mono leading-none text-cyber-primary">
+                01010101010101010101010101
+                10101010101010101010101010
+                01010101010101010101010101
+                10101010101010101010101010
+                01010101010101010101010101
+            </pre>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section id="expertise" class="py-24 bg-dark-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 glass border-t-2 border-cyber-primary">
+                    <div class="text-cyber-primary mb-4 text-2xl font-mono">01/</div>
+                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Cloud Hardening</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        AWS & Azure infrastructure security, IAM policy least-privilege enforcement, and VPC security boundary design.
+                    </p>
+                </div>
+                <div class="p-8 glass border-t-2 border-cyber-secondary">
+                    <div class="text-cyber-secondary mb-4 text-2xl font-mono">02/</div>
+                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">SSE & SASE</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Netskope implementation, Zero Trust Network Access (ZTNA), and Cloud Access Security Broker (CASB) strategies.
+                    </p>
+                </div>
+                <div class="p-8 glass border-t-2 border-cyber-accent">
+                    <div class="text-cyber-accent mb-4 text-2xl font-mono">03/</div>
+                    <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Compliance</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Automated SOC2, HIPAA, and ISO 27001 readiness. Infrastructure as Code (IaC) security scanning and guardrails.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Services -->
+    <section id="services" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Fractional Services</h2>
+                <div class="h-1 w-20 bg-cyber-primary"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4 group">
+                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white mb-2">Vulnerability Management</h4>
+                            <p class="text-gray-400">Continuous scanning, triage, and remediation workflows for cloud-native applications.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 group">
+                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white mb-2">Security Automation</h4>
+                            <p class="text-gray-400">Custom Python/Go tooling for incident response and automated security patching.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 group">
+                        <div class="mt-1 w-2 h-2 bg-cyber-primary group-hover:scale-150 transition-transform"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white mb-2">Architectural Review</h4>
+                            <p class="text-gray-400">Threat modeling and design-level security reviews for new product features.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-video bg-dark-800 rounded-lg border border-white/5 flex items-center justify-center overflow-hidden">
+                        <div class="font-mono text-[10px] text-cyber-primary/40 animate-pulse">
+                            [SYSTEM_ANALYSIS] RUNNING...<br/>
+                            [SCANNING_VPC_PEERING]... DONE<br/>
+                            [CHECKING_S3_BUCKETS]... 0 PUBLIC FOUND<br/>
+                            [IAM_ENFORCER]... ACTIVE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-24 bg-dark-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-8">Ready to secure your perimeter?</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+                Currently accepting 1 new fractional client for Q3 2026.
+            </p>
+            <a href="mailto:hello@justsoc.in" class="text-3xl md:text-5xl font-mono text-cyber-primary hover:text-white transition-colors underline decoration-2 underline-offset-8">
+                hello@justsoc.in
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs font-mono uppercase tracking-widest text-gray-500">
+            <div>&copy; 2026 JustSOC Cybersecurity Services</div>
+            <div class="mt-4 md:mt-0 space-x-6">
+                <span>justsoc.in</span>
+                <span>Bengaluru, IN</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
