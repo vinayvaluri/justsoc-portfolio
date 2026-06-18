@@ -105,15 +105,6 @@
             50% { transform: translateY(-10px); }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
-        .terminal-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 1.2em;
-            background: var(--accent-cyan);
-            vertical-align: middle;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body class="font-sans">
@@ -168,50 +159,6 @@
                     <a href="#services" class="w-full sm:w-auto px-8 py-4 glass text-white font-semibold rounded-full hover:bg-white/5 transition-all text-sm uppercase tracking-widest">
                         View Tracks
                     </a>
-                </div>
-            </div>
-
-            <!-- Terminal Mockup -->
-            <div class="mt-24 w-full max-w-5xl glass rounded-2xl overflow-hidden shadow-2xl border-white/5 animate-float relative">
-                <div class="scanline"></div>
-                <div class="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center justify-between">
-                    <div class="flex gap-1.5">
-                        <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                    </div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest"></div>
-                    <div class="w-12"></div>
-                </div>
-                <div class="p-8 font-mono text-sm leading-relaxed text-slate-300 min-h-[300px]" id="terminal">
-                    <div class="flex gap-4 mb-2">
-                        <span class="text-accent">$</span>
-                        <span class="typing-text" data-text="justsoc assess --scope enterprise"></span>
-                    </div>
-                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-slate-600">></span>
-                        <span>Mapping assets ........................ <span class="text-accent-cyan">1,420 endpoints · 84 servers</span></span>
-                    </div>
-                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-slate-600">></span>
-                        <span>Evaluating controls ................... <span class="text-accent-cyan">EDR · SASE · DLP · Email · SIEM</span></span>
-                    </div>
-                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-slate-600">></span>
-                        <span>Posture vs NIST CSF ................... <span class="text-accent-cyan">62% → target 88%</span></span>
-                    </div>
-                    <div class="flex gap-4 mb-2 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-slate-600">></span>
-                        <span class="text-red-400">Identified risks ...................... 7 critical · 14 high · 31 medium</span>
-                    </div>
-                    <div class="flex gap-4 mb-4 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-slate-600">></span>
-                        <span class="text-green-400">Roadmap generated ..................... ✓ 90-day plan delivered</span>
-                    </div>
-                    <div class="flex gap-4 opacity-0 terminal-line" style="transition: opacity 0.5s">
-                        <span class="text-accent">$</span>
-                        <span class="terminal-cursor"></span>
-                    </div>
                 </div>
             </div>
         </section>
@@ -385,45 +332,6 @@
                 card.style.setProperty('--y', `${y}px`);
             });
         });
-
-        // Terminal animation
-        const typingElements = document.querySelectorAll('.typing-text');
-        const lines = document.querySelectorAll('.terminal-line');
-        
-        function typeEffect(element, text, speed = 40) {
-            let i = 0;
-            return new Promise(resolve => {
-                const interval = setInterval(() => {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    if (i > text.length) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, speed);
-            });
-        }
-
-        async function runTerminal() {
-            for (let i = 0; i < typingElements.length; i++) {
-                await typeEffect(typingElements[i], typingElements[i].getAttribute('data-text'));
-                await new Promise(r => setTimeout(r, 500));
-            }
-            for (let i = 0; i < lines.length; i++) {
-                lines[i].style.opacity = '1';
-                await new Promise(r => setTimeout(r, 400));
-            }
-        }
-
-        // Run when visible
-        const observer = new IntersectionObserver((entries) => {
-            if(entries[0].isIntersecting) {
-                runTerminal();
-                observer.disconnect();
-            }
-        }, { threshold: 0.5 });
-        
-        observer.observe(document.getElementById('terminal'));
 
         // Nav blur on scroll
         window.addEventListener('scroll', () => {
